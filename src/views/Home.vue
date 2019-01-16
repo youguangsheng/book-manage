@@ -1,18 +1,68 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="mainContant">
+    <my-head>
+      <h3>首页</h3>
+    </my-head>
+
+    <transition name="fade">
+      <!-- <keep-alive> -->
+      <carousel :Slides="swiperSlides"></carousel>
+      <!-- </keep-alive> -->
+    </transition>
+    <transition name="fade">
+      <!-- <keep-alive> -->
+      <hot-book :Books="hotBooks"></hot-book>
+      <!-- </keep-alive> -->
+    </transition>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
+import MyHead from "../components/MyHead.vue";
+import Carousel from "../components/Carousel.vue";
+import HotBook from "../components/HotBook.vue";
+import { getSwiperImage, getHotBook } from "../api/index.js";
 export default {
-  name: "home",
+  props: {},
+  data() {
+    return {
+      swiperSlides: [],
+      hotBooks: []
+    };
+  },
+  created() {
+    this.SwiperSlides();
+    this.HotBooks();
+  },
+  methods: {
+    async SwiperSlides() {
+      this.swiperSlides = await getSwiperImage();
+    },
+    async HotBooks() {
+      this.hotBooks = await getHotBook();
+      // console.log(this.hotBooks);
+    }
+  },
   components: {
-    HelloWorld
+    MyHead,
+    Carousel,
+    HotBook
   }
 };
 </script>
+
+<style scoped lang="scss">
+.mainContant {
+  font-size: 0.16rem;
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 5s ease;
+    opacity: 1;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+}
+</style>
